@@ -1,5 +1,7 @@
 import cors from 'cors'
 import express from 'express'
+import errorHandler from './middleware/error.middleware.js'
+import authRoutes from './modules/auth/auth.routes.js'
 
 const app = express()
 
@@ -19,5 +21,19 @@ app.get('/api/health', (req, res) => {
     timestamp: new Date().toISOString(),
   })
 })
+
+// Module Routes
+app.use('/api/auth', authRoutes)
+
+// 404 Handler
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: `Cannot ${req.method} ${req.originalUrl}`,
+  })
+})
+
+// Global Error Handler
+app.use(errorHandler)
 
 export default app
