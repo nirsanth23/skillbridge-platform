@@ -65,12 +65,10 @@
 
 | Method | Endpoint | Purpose | Auth Required | Allowed Roles |
 | :--- | :--- | :--- | :--- | :--- |
+| `GET` | `/freelancers/me` | Fetch authenticated freelancer's own profile | Required | Freelancer |
+| `PATCH` | `/freelancers/me` | Update authenticated freelancer's profile (bio, skills, hourlyRate, portfolio, availability) | Required | Freelancer |
+| `GET` | `/freelancers/:id` | Fetch public freelancer profile and portfolio | Public | All |
 | `GET` | `/freelancers` | Search and filter freelancer profiles (skills, rating, rate) | Public / Optional | All |
-| `GET` | `/freelancers/:id` | Fetch detailed freelancer profile, portfolio, and stats | Public / Optional | All |
-| `POST` | `/freelancers/profile` | Create freelancer profile extension | Required | Freelancer |
-| `PATCH` | `/freelancers/profile` | Update freelancer bio, skills, rates, availability | Required | Freelancer |
-| `POST` | `/freelancers/portfolio`| Add new portfolio item | Required | Freelancer |
-| `DELETE`| `/freelancers/portfolio/:itemId` | Remove portfolio item | Required | Freelancer |
 | `POST` | `/freelancers/verify-skill` | Submit skill verification request | Required | Freelancer |
 
 ---
@@ -79,10 +77,10 @@
 
 | Method | Endpoint | Purpose | Auth Required | Allowed Roles |
 | :--- | :--- | :--- | :--- | :--- |
+| `GET` | `/mentors/me` | Fetch authenticated mentor's own profile | Required | Mentor |
+| `PATCH` | `/mentors/me` | Update authenticated mentor's profile (bio, expertise, hourlyRate, mentoringTopics, availability) | Required | Mentor |
+| `GET` | `/mentors/:id` | Fetch public mentor details, expertise, and availability | Public | All |
 | `GET` | `/mentors` | Search and filter mentors (expertise, fees, rating) | Public / Optional | All |
-| `GET` | `/mentors/:id` | Fetch mentor details, certifications, and availability slots | Public / Optional | All |
-| `POST` | `/mentors/profile` | Create mentor profile extension | Required | Mentor |
-| `PATCH` | `/mentors/profile` | Update mentor profile, expertise, and session fee | Required | Mentor |
 | `PUT` | `/mentors/availability`| Set or update weekly recurring availability slots | Required | Mentor |
 
 ---
@@ -91,10 +89,10 @@
 
 | Method | Endpoint | Purpose | Auth Required | Allowed Roles |
 | :--- | :--- | :--- | :--- | :--- |
+| `GET` | `/companies/me` | Fetch authenticated company's own profile | Required | Company |
+| `PATCH` | `/companies/me` | Update authenticated company's profile (companyName, description, industry, website, location, companySize) | Required | Company |
+| `GET` | `/companies/:id` | Fetch public company details | Public | All |
 | `GET` | `/companies` | Browse verified company profiles | Public / Optional | All |
-| `GET` | `/companies/:id` | Fetch company details and posted projects | Public / Optional | All |
-| `POST` | `/companies/profile` | Create organization profile | Required | Company |
-| `PATCH` | `/companies/profile` | Update company description, size, and website | Required | Company |
 | `GET` | `/companies/talent-pool` | View saved freelancers in company talent pool | Required | Company |
 | `POST` | `/companies/talent-pool` | Add freelancer to talent pool with notes | Required | Company |
 | `DELETE`| `/companies/talent-pool/:freelancerId` | Remove freelancer from talent pool | Required | Company |
