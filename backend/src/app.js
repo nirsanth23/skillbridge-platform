@@ -2,6 +2,7 @@ import cors from 'cors'
 import express from 'express'
 import errorHandler from './middleware/error.middleware.js'
 import authRoutes from './modules/auth/auth.routes.js'
+import userRoutes from './modules/users/user.routes.js'
 
 const app = express()
 
@@ -24,6 +25,7 @@ app.get('/api/health', (req, res) => {
 
 // Module Routes
 app.use('/api/auth', authRoutes)
+app.use('/api/users', userRoutes)
 
 // 404 Handler
 app.use((req, res) => {

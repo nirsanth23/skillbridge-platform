@@ -52,6 +52,8 @@
 
 | Method | Endpoint | Purpose | Auth Required | Allowed Roles |
 | :--- | :--- | :--- | :--- | :--- |
+| `GET` | `/users/me` | Fetch authenticated user's own profile | Required | All Authenticated |
+| `PATCH` | `/users/me` | Update authenticated user's own profile (name, profileImage) | Required | All Authenticated |
 | `GET` | `/users/:id` | Fetch public user profile and basic information | Required | All Authenticated |
 | `PATCH` | `/users/:id` | Update personal account profile details | Required | Account Owner / Admin |
 | `POST` | `/users/:id/avatar` | Upload or update user profile image | Required | Account Owner |
