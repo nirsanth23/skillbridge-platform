@@ -5,6 +5,7 @@ import authRoutes from './modules/auth/auth.routes.js'
 import companyRoutes from './modules/companies/company.routes.js'
 import freelancerRoutes from './modules/freelancers/freelancer.routes.js'
 import mentorRoutes from './modules/mentors/mentor.routes.js'
+import projectRoutes from './modules/projects/project.routes.js'
 import userRoutes from './modules/users/user.routes.js'
 
 const app = express()
@@ -32,6 +33,7 @@ app.use('/api/users', userRoutes)
 app.use('/api/freelancers', freelancerRoutes)
 app.use('/api/mentors', mentorRoutes)
 app.use('/api/companies', companyRoutes)
+app.use('/api/projects', projectRoutes)
 
 // 404 Handler
 app.use((req, res) => {
