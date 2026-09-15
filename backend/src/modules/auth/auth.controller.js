@@ -1,5 +1,6 @@
 import * as authService from './auth.service.js'
-import { validateLoginInput, validateRegisterInput } from './auth.validation.js'
+import { validateChangePasswordInput, validateLoginInput, validateRegisterInput } from './auth.validation.js'
+
 
 /**
  * @route   POST /api/auth/register
@@ -99,3 +100,36 @@ export const logout = async (req, res) => {
     message: 'Logged out successfully. Please remove your token from the client.',
   })
 }
+
+/**
+ * @route   POST /api/auth/change-password
+ * @desc    Change authenticated user password
+ * @access  Private (Authenticated)
+ */
+export const changePassword = async (req, res, next) => {
+  try {
+    const { isValid, errors, sanitized } = validateChangePasswordInput(req.body)
+
+    if (!isValid) {
+      return res.status(400).json({
+        success: false,
+        message: 'Validation failed',
+        errors,
+      })
+    }
+
+    await authService.changePassword(
+      req.user.id,
+      sanitized.currentPassword,
+      sanitized.newPassword
+    )
+
+    return res.status(200).json({
+      success: true,
+      message: 'Password changed successfully',
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+

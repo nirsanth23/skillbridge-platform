@@ -31,13 +31,20 @@ export const validateUpdateProfileInput = (data = {}) => {
     if (data.profileImage === null || data.profileImage === '') {
       sanitized.profileImage = null
     } else if (typeof data.profileImage !== 'string') {
-      errors.profileImage = 'Profile image must be a valid string or URL'
+      errors.profileImage = 'Profile image must be a valid string or image data'
     } else {
       const trimmedUrl = data.profileImage.trim()
-      if (trimmedUrl.length > 500) {
-        errors.profileImage = 'Profile image URL cannot exceed 500 characters'
+      if (trimmedUrl.startsWith('data:image/')) {
+        // Base64 image payload (limit max 5MB)
+        if (trimmedUrl.length > 5 * 1024 * 1024) {
+          errors.profileImage = 'Profile image size exceeds 5MB limit'
+        } else {
+          sanitized.profileImage = trimmedUrl
+        }
+      } else if (trimmedUrl.length > 1000) {
+        errors.profileImage = 'Profile image URL cannot exceed 1000 characters'
       } else if (!URL_REGEX.test(trimmedUrl) && !trimmedUrl.startsWith('/') && !trimmedUrl.startsWith('http')) {
-        errors.profileImage = 'Please provide a valid URL or path for profile image'
+        errors.profileImage = 'Please provide a valid image file or URL'
       } else {
         sanitized.profileImage = trimmedUrl
       }

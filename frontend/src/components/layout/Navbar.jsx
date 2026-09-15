@@ -86,21 +86,10 @@ export const Navbar = () => {
                     <span>My Projects</span>
                   </Link>
                 )}
-
-                <Link
-                  to="/profile"
-                  className={`flex items-center space-x-1.5 px-3 py-2 rounded-xl text-sm font-medium transition ${
-                    location.pathname === '/profile'
-                      ? 'bg-indigo-50 text-indigo-700 font-semibold'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                  }`}
-                >
-                  <User className="w-4 h-4" />
-                  <span>Profile</span>
-                </Link>
               </nav>
             )}
           </div>
+
 
           {/* Navigation Controls */}
           <div className="flex items-center space-x-3 sm:space-x-4">
