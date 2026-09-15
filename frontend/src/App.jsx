@@ -5,6 +5,10 @@ import { AuthProvider } from './context/AuthContext'
 import Login from './pages/auth/Login'
 import Register from './pages/auth/Register'
 import Profile from './pages/profile/Profile'
+import CreateProject from './pages/projects/CreateProject'
+import EditProject from './pages/projects/EditProject'
+import ProjectDetails from './pages/projects/ProjectDetails'
+import Projects from './pages/projects/Projects'
 
 export function App() {
   return (
@@ -28,9 +32,43 @@ export function App() {
                 }
               />
 
+              {/* Protected Project Management Routes */}
+              <Route
+                path="/projects"
+                element={
+                  <ProtectedRoute>
+                    <Projects />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/projects/create"
+                element={
+                  <ProtectedRoute>
+                    <CreateProject />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/projects/:id"
+                element={
+                  <ProtectedRoute>
+                    <ProjectDetails />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/projects/:id/edit"
+                element={
+                  <ProtectedRoute>
+                    <EditProject />
+                  </ProtectedRoute>
+                }
+              />
+
               {/* Default & Catch-all Fallbacks */}
-              <Route path="/" element={<Navigate to="/profile" replace />} />
-              <Route path="*" element={<Navigate to="/profile" replace />} />
+              <Route path="/" element={<Navigate to="/projects" replace />} />
+              <Route path="*" element={<Navigate to="/projects" replace />} />
             </Routes>
           </main>
         </div>
