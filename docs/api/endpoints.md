@@ -105,12 +105,12 @@
 
 | Method | Endpoint | Purpose | Auth Required | Allowed Roles |
 | :--- | :--- | :--- | :--- | :--- |
+| `GET` | `/projects` | Browse, search, filter, sort, and paginate open marketplace projects (`search`, `category`, `skills`, `budgetType`, `sort`, `page`, `limit`) | Required | All Authenticated Roles (`student`, `client`, `company`, `freelancer`, `mentor`) |
 | `POST` | `/projects` | Create a new project posting | Required | Student, Client, Company |
-| `GET` | `/projects/my` | List projects created by the authenticated user (supports status filter) | Required | All Authenticated |
-| `GET` | `/projects/:id` | Fetch project details, requirements, and safe owner info | Required | All Authenticated |
+| `GET` | `/projects/my` | List projects created by the authenticated user (supports `status` filter) | Required | All Authenticated |
+| `GET` | `/projects/:id` | Fetch complete project details, requirements, and safe public owner info | Required | All Authenticated |
 | `PATCH` | `/projects/:id` | Update project details (title, description, budget, skills, status) | Required | Project Owner |
 | `DELETE`| `/projects/:id` | Delete or cancel project posting | Required | Project Owner |
-| `GET` | `/projects` | Browse and filter open projects (category, budget, skills) | Public / Optional | All |
 
 ---
 

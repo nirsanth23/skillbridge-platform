@@ -1,5 +1,37 @@
 import * as projectService from './project.service.js'
-import { validateProjectCreate, validateProjectUpdate } from './project.validation.js'
+import {
+  validateProjectCreate,
+  validateProjectQuery,
+  validateProjectUpdate,
+} from './project.validation.js'
+
+/**
+ * @route   GET /api/projects
+ * @desc    Browse open projects with search, filters, sort, and pagination
+ * @access  Private (All authenticated users)
+ */
+export const getProjects = async (req, res, next) => {
+  try {
+    const { isValid, errors, sanitized } = validateProjectQuery(req.query)
+
+    if (!isValid) {
+      return res.status(400).json({
+        success: false,
+        message: 'Validation failed',
+        errors,
+      })
+    }
+
+    const result = await projectService.getProjects(sanitized)
+
+    return res.status(200).json({
+      success: true,
+      data: result,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
 
 /**
  * @route   POST /api/projects

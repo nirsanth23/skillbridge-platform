@@ -1,6 +1,11 @@
 import api from './api'
 
 export const projectService = {
+  getProjects: async (params = {}) => {
+    const response = await api.get('/projects', { params })
+    return response.data
+  },
+
   createProject: async (projectData) => {
     const response = await api.post('/projects', projectData)
     return response.data
