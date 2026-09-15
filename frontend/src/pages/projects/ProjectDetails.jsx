@@ -7,7 +7,8 @@ import {
   Clock,
   DollarSign,
   Edit3,
-  Mail,
+  Send,
+  ShieldCheck,
   Tag,
   Trash2,
   User,
@@ -35,6 +36,7 @@ export const ProjectDetails = () => {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [deleting, setDeleting] = useState(false)
+  const [applyClicked, setApplyClicked] = useState(false)
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -134,7 +136,7 @@ export const ProjectDetails = () => {
               to="/projects"
               className="inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-semibold rounded-xl hover:bg-indigo-700 transition"
             >
-              Back to My Projects
+              Back to Projects
             </Link>
           </div>
         </div>
@@ -156,7 +158,7 @@ export const ProjectDetails = () => {
             className="inline-flex items-center space-x-1.5 text-xs font-semibold text-slate-500 hover:text-indigo-600 transition"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>Back to My Projects</span>
+            <span>Back to Projects</span>
           </Link>
 
           {isOwner && (
@@ -274,7 +276,7 @@ export const ProjectDetails = () => {
             </div>
           </div>
 
-          {/* Right Sidebar (1 col): Budget, Deadline, Poster Card */}
+          {/* Right Sidebar (1 col): Budget, Timeline, Poster Card & Apply CTA */}
           <div className="space-y-6">
             {/* Budget & Timeline Card */}
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
@@ -303,6 +305,29 @@ export const ProjectDetails = () => {
                   </div>
                 </div>
               </div>
+
+              {/* Apply / Proposal Placeholder Button */}
+              {!isOwner && (
+                <div className="pt-2 border-t border-slate-100 space-y-2">
+                  <button
+                    type="button"
+                    onClick={() => setApplyClicked(true)}
+                    className="w-full flex items-center justify-center space-x-2 py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-semibold shadow-sm transition"
+                  >
+                    <Send className="w-4 h-4" />
+                    <span>Apply for Project</span>
+                  </button>
+
+                  {applyClicked && (
+                    <div className="p-3 bg-indigo-50 border border-indigo-200 text-indigo-800 rounded-xl text-xs space-y-1">
+                      <p className="font-semibold">⚡ Proposal Submissions Coming in Day 8</p>
+                      <p className="text-indigo-600">
+                        The full proposal bidding and proposal submission module will be unlocked in Day 8.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Poster / Owner Safe Card */}
@@ -326,17 +351,26 @@ export const ProjectDetails = () => {
                   )}
 
                   <div>
-                    <h4 className="text-sm font-bold text-slate-900">{project.owner.name}</h4>
+                    <div className="flex items-center space-x-1.5">
+                      <h4 className="text-sm font-bold text-slate-900">{project.owner.name}</h4>
+                      {project.owner.isVerified && (
+                        <ShieldCheck className="w-4 h-4 text-emerald-600" title="Verified Client" />
+                      )}
+                    </div>
                     <span className="inline-block text-[11px] font-semibold text-slate-600 uppercase tracking-wider">
                       {project.owner.role}
                     </span>
                   </div>
                 </div>
 
-                <div className="pt-2 border-t border-slate-100 text-xs text-slate-500 flex items-center space-x-1.5">
-                  <Mail className="w-3.5 h-3.5 text-slate-400" />
-                  <span>{project.owner.email}</span>
-                </div>
+                {project.owner.isVerified && (
+                  <div className="pt-2 border-t border-slate-100">
+                    <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                      <ShieldCheck className="w-3 h-3" />
+                      <span>Verified Client Account</span>
+                    </span>
+                  </div>
+                )}
               </div>
             )}
           </div>

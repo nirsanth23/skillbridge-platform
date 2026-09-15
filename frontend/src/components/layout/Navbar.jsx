@@ -1,6 +1,7 @@
 import {
   Briefcase,
   Building2,
+  Compass,
   FolderKanban,
   GraduationCap,
   LogOut,
@@ -63,14 +64,28 @@ export const Navbar = () => {
                 <Link
                   to="/projects"
                   className={`flex items-center space-x-1.5 px-3 py-2 rounded-xl text-sm font-medium transition ${
-                    location.pathname.startsWith('/projects') && location.pathname !== '/projects/create'
+                    location.pathname === '/projects'
                       ? 'bg-indigo-50 text-indigo-700 font-semibold'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                   }`}
                 >
-                  <FolderKanban className="w-4 h-4" />
-                  <span>My Projects</span>
+                  <Compass className="w-4 h-4" />
+                  <span>Explore Projects</span>
                 </Link>
+
+                {canPostProject && (
+                  <Link
+                    to="/my-projects"
+                    className={`flex items-center space-x-1.5 px-3 py-2 rounded-xl text-sm font-medium transition ${
+                      location.pathname === '/my-projects'
+                        ? 'bg-indigo-50 text-indigo-700 font-semibold'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                    }`}
+                  >
+                    <FolderKanban className="w-4 h-4" />
+                    <span>My Projects</span>
+                  </Link>
+                )}
 
                 <Link
                   to="/profile"

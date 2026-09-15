@@ -7,6 +7,7 @@ import Register from './pages/auth/Register'
 import Profile from './pages/profile/Profile'
 import CreateProject from './pages/projects/CreateProject'
 import EditProject from './pages/projects/EditProject'
+import MyProjects from './pages/projects/MyProjects'
 import ProjectDetails from './pages/projects/ProjectDetails'
 import Projects from './pages/projects/Projects'
 
@@ -32,12 +33,20 @@ export function App() {
                 }
               />
 
-              {/* Protected Project Management Routes */}
+              {/* Protected Project Discovery & Management Routes */}
               <Route
                 path="/projects"
                 element={
                   <ProtectedRoute>
                     <Projects />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/my-projects"
+                element={
+                  <ProtectedRoute>
+                    <MyProjects />
                   </ProtectedRoute>
                 }
               />

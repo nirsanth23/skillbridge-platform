@@ -5,6 +5,9 @@ import * as projectController from './project.controller.js'
 
 const router = express.Router()
 
+// Project discovery / marketplace browsing (All authenticated roles)
+router.get('/', authenticate, projectController.getProjects)
+
 // Create project - restricted to student, client, company
 router.post(
   '/',

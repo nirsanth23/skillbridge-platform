@@ -305,3 +305,94 @@ export const validateProjectUpdate = (data = {}) => {
     sanitized,
   }
 }
+
+/**
+ * Validates and sanitizes query parameters for project discovery
+ * @param {Object} query 
+ * @returns {{ isValid: boolean, errors: Object, sanitized: Object }}
+ */
+export const validateProjectQuery = (query = {}) => {
+  const errors = {}
+  const sanitized = {
+    sort: 'newest',
+    page: 1,
+    limit: 10,
+  }
+
+  // Search
+  if (query.search !== undefined && typeof query.search === 'string') {
+    const trimmed = query.search.trim()
+    if (trimmed.length > 100) {
+      errors.search = 'Search query cannot exceed 100 characters'
+    } else if (trimmed.length > 0) {
+      sanitized.search = trimmed
+    }
+  }
+
+  // Category
+  if (query.category !== undefined && typeof query.category === 'string') {
+    const trimmed = query.category.trim()
+    if (trimmed.length > 0) {
+      sanitized.category = trimmed
+    }
+  }
+
+  // Skills
+  if (query.skills !== undefined) {
+    if (Array.isArray(query.skills)) {
+      sanitized.skills = query.skills
+        .filter((s) => typeof s === 'string' && s.trim().length > 0)
+        .map((s) => s.trim())
+    } else if (typeof query.skills === 'string') {
+      sanitized.skills = query.skills
+        .split(',')
+        .map((s) => s.trim())
+        .filter((s) => s.length > 0)
+    }
+  }
+
+  // Budget Type
+  if (query.budgetType !== undefined && query.budgetType !== '') {
+    if (!ALLOWED_BUDGET_TYPES.includes(query.budgetType)) {
+      errors.budgetType = `Budget type must be one of: ${ALLOWED_BUDGET_TYPES.join(', ')}`
+    } else {
+      sanitized.budgetType = query.budgetType
+    }
+  }
+
+  // Sorting
+  if (query.sort !== undefined && query.sort !== '') {
+    if (!['newest', 'oldest'].includes(query.sort)) {
+      errors.sort = "Sort option must be 'newest' or 'oldest'"
+    } else {
+      sanitized.sort = query.sort
+    }
+  }
+
+  // Page
+  if (query.page !== undefined && query.page !== '') {
+    const parsedPage = parseInt(query.page, 10)
+    if (isNaN(parsedPage) || parsedPage < 1) {
+      errors.page = 'Page must be a positive integer'
+    } else {
+      sanitized.page = parsedPage
+    }
+  }
+
+  // Limit
+  if (query.limit !== undefined && query.limit !== '') {
+    const parsedLimit = parseInt(query.limit, 10)
+    if (isNaN(parsedLimit) || parsedLimit < 1 || parsedLimit > 50) {
+      errors.limit = 'Limit must be an integer between 1 and 50'
+    } else {
+      sanitized.limit = parsedLimit
+    }
+  }
+
+  return {
+    isValid: Object.keys(errors).length === 0,
+    errors,
+    sanitized,
+  }
+}
+
