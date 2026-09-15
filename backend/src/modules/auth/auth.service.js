@@ -118,3 +118,43 @@ export const getUserById = async (userId) => {
   }
   return user.toJSON()
 }
+
+/**
+ * Changes user password after verifying current password
+ * @param {string} userId 
+ * @param {string} currentPassword 
+ * @param {string} newPassword 
+ * @returns {Promise<void>}
+ */
+export const changePassword = async (userId, currentPassword, newPassword) => {
+  const user = await User.findById(userId).select('+passwordHash')
+  if (!user) {
+    const error = new Error('User not found')
+    error.statusCode = 404
+    throw error
+  }
+
+  if (user.status !== 'active') {
+    const error = new Error(`Account is ${user.status}. Access denied.`)
+    error.statusCode = 403
+    throw error
+  }
+
+  const isMatch = await user.comparePassword(currentPassword)
+  if (!isMatch) {
+    const error = new Error('Current password is incorrect')
+    error.statusCode = 400
+    throw error
+  }
+
+  if (currentPassword === newPassword) {
+    const error = new Error('New password must be different from current password')
+    error.statusCode = 400
+    throw error
+  }
+
+  const salt = await bcrypt.genSalt(10)
+  user.passwordHash = await bcrypt.hash(newPassword, salt)
+  await user.save()
+}
+

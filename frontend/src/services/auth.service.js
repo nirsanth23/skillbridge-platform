@@ -23,6 +23,15 @@ export const authService = {
       // Stateless logout: ignore backend network error
     }
   },
+
+  changePassword: async ({ currentPassword, newPassword }) => {
+    const response = await api.post('/auth/change-password', {
+      currentPassword,
+      newPassword,
+    })
+    return response.data
+  },
 }
 
 export default authService
+

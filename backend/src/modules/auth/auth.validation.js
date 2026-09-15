@@ -87,3 +87,35 @@ export const validateLoginInput = (data = {}) => {
     },
   }
 }
+
+/**
+ * Validates change password payload
+ * @param {Object} data 
+ * @returns {{ isValid: boolean, errors: Object, sanitized: Object }}
+ */
+export const validateChangePasswordInput = (data = {}) => {
+  const errors = {}
+
+  const currentPassword = typeof data.currentPassword === 'string' ? data.currentPassword : ''
+  const newPassword = typeof data.newPassword === 'string' ? data.newPassword : ''
+
+  if (!currentPassword) {
+    errors.currentPassword = 'Current password is required'
+  }
+
+  if (!newPassword) {
+    errors.newPassword = 'New password is required'
+  } else if (newPassword.length < 6) {
+    errors.newPassword = 'New password must be at least 6 characters long'
+  }
+
+  return {
+    isValid: Object.keys(errors).length === 0,
+    errors,
+    sanitized: {
+      currentPassword,
+      newPassword,
+    },
+  }
+}
+
