@@ -107,7 +107,7 @@
 | :--- | :--- | :--- | :--- | :--- |
 | `GET` | `/projects` | Browse, search, filter, sort, and paginate open marketplace projects (`search`, `category`, `skills`, `budgetType`, `sort`, `page`, `limit`) | Required | All Authenticated Roles (`student`, `client`, `company`, `freelancer`, `mentor`) |
 | `POST` | `/projects` | Create a new project posting | Required | Student, Client, Company |
-| `GET` | `/projects/my` | List projects created by the authenticated user (supports `status` filter) | Required | All Authenticated |
+| `GET` | `/projects/my` / `/projects/my-projects` | List projects created by the authenticated user (supports `status` filter) | Required | All Authenticated |
 | `GET` | `/projects/:id` | Fetch complete project details, requirements, and safe public owner info | Required | All Authenticated |
 | `PATCH` | `/projects/:id` | Update project details (title, description, budget, skills, status) | Required | Project Owner |
 | `DELETE`| `/projects/:id` | Delete or cancel project posting | Required | Project Owner |
@@ -118,12 +118,13 @@
 
 | Method | Endpoint | Purpose | Auth Required | Allowed Roles |
 | :--- | :--- | :--- | :--- | :--- |
-| `POST` | `/projects/:projectId/proposals` | Submit a project proposal / bid | Required | Freelancer |
-| `GET` | `/projects/:projectId/proposals` | View all proposals submitted for a specific project | Required | Project Owner |
-| `GET` | `/proposals/:id` | View proposal details | Required | Proposal Owner, Project Owner |
-| `PATCH` | `/proposals/:id` | Accept, shortlist, or reject a proposal | Required | Project Owner |
-| `DELETE`| `/proposals/:id` | Withdraw a submitted proposal | Required | Proposal Owner |
+| `POST` | `/proposals` | Submit a project proposal / bid | Required | Freelancer |
+| `GET` | `/proposals/project/:projectId` | View all proposals submitted for a specific project | Required | Project Owner |
 | `GET` | `/proposals/my-proposals` | View all proposals submitted by current freelancer | Required | Freelancer |
+| `GET` | `/proposals/:id` | View proposal details | Required | Proposal Owner, Project Owner |
+| `PATCH` | `/proposals/:id/accept` | Accept proposal, hire freelancer, set project in_progress, and auto-reject other pending proposals | Required | Project Owner |
+| `PATCH` | `/proposals/:id/reject` | Explicitly reject candidate proposal | Required | Project Owner |
+| `DELETE`| `/proposals/:id` | Withdraw a submitted proposal | Required | Proposal Owner |
 
 ---
 
@@ -132,10 +133,18 @@
 | Method | Endpoint | Purpose | Auth Required | Allowed Roles |
 | :--- | :--- | :--- | :--- | :--- |
 | `POST` | `/bookings` | Request a mentorship session booking | Required | Student, Client |
-| `GET` | `/bookings` | List user's mentorship bookings (upcoming & past) | Required | Student, Mentor |
+| `GET` | `/bookings/my-bookings` | List user's mentorship bookings (with optional `status` filter) | Required | Student, Mentor |
 | `GET` | `/bookings/:id` | Fetch specific booking details and meeting link | Required | Involved Student / Mentor |
-| `PATCH` | `/bookings/:id` | Confirm, reject, or complete a booking | Required | Mentor, Admin |
-| `DELETE`| `/bookings/:id` | Cancel a scheduled booking | Required | Involved Student / Mentor |
+| `PATCH` | `/bookings/:id/status` | Confirm, reject, or complete a booking | Required | Mentor, Admin |
+| `PATCH` | `/bookings/:id/cancel` | Cancel a scheduled booking | Required | Involved Student / Mentor |
+
+---
+
+### 2.10 Student Portal Module (`/api/student`)
+
+| Method | Endpoint | Purpose | Auth Required | Allowed Roles |
+| :--- | :--- | :--- | :--- | :--- |
+| `GET` | `/student/dashboard` | Fetch aggregated dashboard metrics (project counts, active projects, recent bookings, recent notifications) | Required | Student |
 
 ---
 

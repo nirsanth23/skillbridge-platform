@@ -1,4 +1,5 @@
 import {
+  Briefcase,
   Building2,
   Calendar,
   Clock,
@@ -10,6 +11,7 @@ import {
   User,
 } from 'lucide-react'
 import { Link } from 'react-router-dom'
+
 
 const STATUS_BADGES = {
   draft: 'bg-slate-100 text-slate-700 border-slate-200',
@@ -153,6 +155,14 @@ export const ProjectCard = ({ project, onDelete, isOwner = true }) => {
           {isOwner && (
             <>
               <Link
+                to={`/student/projects/${project._id}/proposals`}
+                className="p-2 text-slate-500 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition"
+                title="View Proposals & Candidates"
+              >
+                <Briefcase className="w-4 h-4" />
+              </Link>
+
+              <Link
                 to={`/projects/${project._id}/edit`}
                 className="p-2 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition"
                 title="Edit Project"
@@ -164,7 +174,7 @@ export const ProjectCard = ({ project, onDelete, isOwner = true }) => {
                 <button
                   type="button"
                   onClick={() => onDelete(project._id)}
-                  className="p-2 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition"
+                  className="p-2 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition cursor-pointer"
                   title="Delete/Cancel Project"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -172,6 +182,7 @@ export const ProjectCard = ({ project, onDelete, isOwner = true }) => {
               )}
             </>
           )}
+
         </div>
       </div>
     </div>

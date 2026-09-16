@@ -2,10 +2,14 @@ import cors from 'cors'
 import express from 'express'
 import errorHandler from './middleware/error.middleware.js'
 import authRoutes from './modules/auth/auth.routes.js'
+import bookingRoutes from './modules/bookings/booking.routes.js'
 import companyRoutes from './modules/companies/company.routes.js'
 import freelancerRoutes from './modules/freelancers/freelancer.routes.js'
 import mentorRoutes from './modules/mentors/mentor.routes.js'
+import notificationRoutes from './modules/notifications/notification.routes.js'
 import projectRoutes from './modules/projects/project.routes.js'
+import proposalRoutes from './modules/proposals/proposal.routes.js'
+import studentRoutes from './modules/student/student.routes.js'
 import userRoutes from './modules/users/user.routes.js'
 
 const app = express()
@@ -34,6 +38,11 @@ app.use('/api/freelancers', freelancerRoutes)
 app.use('/api/mentors', mentorRoutes)
 app.use('/api/companies', companyRoutes)
 app.use('/api/projects', projectRoutes)
+app.use('/api/proposals', proposalRoutes)
+app.use('/api/bookings', bookingRoutes)
+app.use('/api/notifications', notificationRoutes)
+app.use('/api/student', studentRoutes)
+
 
 // 404 Handler
 app.use((req, res) => {

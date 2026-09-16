@@ -18,6 +18,8 @@ router.post(
 
 // List my projects (authenticated user's own projects)
 router.get('/my', authenticate, projectController.getMyProjects)
+router.get('/my-projects', authenticate, projectController.getMyProjects)
+
 
 // Single project by ID
 router.get('/:id', authenticate, projectController.getProjectById)

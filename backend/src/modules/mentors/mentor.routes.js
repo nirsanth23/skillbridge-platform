@@ -9,7 +9,9 @@ const router = express.Router()
 router.get('/me', authenticate, authorizeRoles('mentor'), mentorController.getMyProfile)
 router.patch('/me', authenticate, authorizeRoles('mentor'), mentorController.updateMyProfile)
 
-// Public profile lookup
+// Public profile and discovery lookup
+router.get('/', mentorController.getMentors)
 router.get('/:id', mentorController.getMentorById)
 
 export default router
+

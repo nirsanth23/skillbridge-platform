@@ -86,7 +86,18 @@ const projectSchema = new mongoose.Schema(
       ],
       default: [],
     },
+    hiredFreelancer: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      default: null,
+    },
+    hiredProposal: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Proposal',
+      default: null,
+    },
   },
+
   {
     timestamps: true,
   }

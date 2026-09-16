@@ -60,7 +60,7 @@ export const getMentorById = async (id) => {
 
   let profile = await MentorProfile.findOne({
     $or: [{ _id: id }, { user: id }],
-  }).populate('user', 'name profileImage role isVerified')
+  }).populate('user', 'name email profileImage role isVerified')
 
   if (!profile) {
     const error = new Error('Mentor profile not found')
@@ -70,3 +70,87 @@ export const getMentorById = async (id) => {
 
   return profile.toJSON()
 }
+
+/**
+ * Retrieves paginated list of mentors with filtering, searching and sorting
+ * @param {Object} query 
+ * @returns {Promise<Object>}
+ */
+export const getMentors = async (query = {}) => {
+  const {
+    search,
+    expertise,
+    availability,
+    minRate,
+    maxRate,
+    sortBy = 'rating',
+    sortOrder = 'desc',
+    page = 1,
+    limit = 12,
+  } = query
+
+  const filter = {}
+
+  if (availability && ['available', 'busy', 'not_available'].includes(availability)) {
+    filter.availability = availability
+  }
+
+  if (expertise) {
+    filter.expertise = { $regex: new RegExp(expertise.trim(), 'i') }
+  }
+
+  if (minRate !== undefined || maxRate !== undefined) {
+    filter.hourlyRate = {}
+    if (minRate !== undefined && !Number.isNaN(Number(minRate))) {
+      filter.hourlyRate.$gte = Number(minRate)
+    }
+    if (maxRate !== undefined && !Number.isNaN(Number(maxRate))) {
+      filter.hourlyRate.$lte = Number(maxRate)
+    }
+  }
+
+  if (search && search.trim()) {
+    const searchRegex = new RegExp(search.trim(), 'i')
+    filter.$or = [
+      { bio: searchRegex },
+      { expertise: searchRegex },
+      { mentoringTopics: searchRegex },
+    ]
+  }
+
+  const sort = {}
+  const order = sortOrder === 'asc' ? 1 : -1
+  if (sortBy === 'experience') {
+    sort.experienceYears = order
+  } else if (sortBy === 'hourlyRate') {
+    sort.hourlyRate = order
+  } else if (sortBy === 'createdAt') {
+    sort.createdAt = order
+  } else {
+    sort.rating = order
+  }
+
+  const pageNum = Math.max(1, parseInt(page, 10) || 1)
+  const limitNum = Math.min(50, Math.max(1, parseInt(limit, 10) || 12))
+  const skip = (pageNum - 1) * limitNum
+
+  const [mentors, total] = await Promise.all([
+    MentorProfile.find(filter)
+      .populate('user', 'name email profileImage role isVerified')
+      .sort(sort)
+      .skip(skip)
+      .limit(limitNum),
+    MentorProfile.countDocuments(filter),
+  ])
+
+  return {
+    mentors: mentors.map((m) => m.toJSON()),
+    pagination: {
+      total,
+      page: pageNum,
+      limit: limitNum,
+      pages: Math.ceil(total / limitNum) || 1,
+    },
+  }
+}
+

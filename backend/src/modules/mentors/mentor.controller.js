@@ -55,6 +55,23 @@ export const updateMyProfile = async (req, res, next) => {
 }
 
 /**
+ * @route   GET /api/mentors
+ * @desc    Get paginated list of mentors with search and filters
+ * @access  Public
+ */
+export const getMentors = async (req, res, next) => {
+  try {
+    const data = await mentorService.getMentors(req.query)
+    return res.status(200).json({
+      success: true,
+      data,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+/**
  * @route   GET /api/mentors/:id
  * @desc    Get public mentor profile by profile or user ID
  * @access  Public
@@ -72,3 +89,4 @@ export const getMentorById = async (req, res, next) => {
     next(error)
   }
 }
+
