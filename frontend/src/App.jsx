@@ -19,23 +19,36 @@ import MyBookings from './pages/student/MyBookings'
 import Notifications from './pages/student/Notifications'
 import ProjectProposals from './pages/student/ProjectProposals'
 import StudentDashboard from './pages/student/StudentDashboard'
+import MentorLayout from './components/layout/MentorLayout'
+import MentorDashboard from './pages/mentor/MentorDashboard'
+import MentorProfile from './pages/mentor/MentorProfile'
+import BookingRequests from './pages/mentor/BookingRequests'
+import MySessions from './pages/mentor/MySessions'
+import BookingDetails from './pages/mentor/BookingDetails'
+import MentorReviews from './pages/mentor/MentorReviews'
+import MentorNotifications from './pages/mentor/MentorNotifications'
 
 const AppContent = () => {
   const { user, isAuthenticated } = useAuth()
   const location = useLocation()
-  const isStudentPortal = location.pathname.startsWith('/student')
+  const isPortal = location.pathname.startsWith('/student') || location.pathname.startsWith('/mentor')
 
   // Helper default redirect based on role
   const getDefaultHome = () => {
-    if (isAuthenticated && user?.role === 'student') {
-      return '/student/dashboard'
+    if (isAuthenticated) {
+      if (user?.role === 'student') {
+        return '/student/dashboard'
+      }
+      if (user?.role === 'mentor') {
+        return '/mentor/dashboard'
+      }
     }
     return '/projects'
   }
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans antialiased">
-      {!isStudentPortal && <Navbar />}
+      {!isPortal && <Navbar />}
       <main className="flex-1">
         <Routes>
           {/* Public Auth Routes */}
@@ -66,6 +79,25 @@ const AppContent = () => {
             <Route path="bookings" element={<MyBookings />} />
             <Route path="notifications" element={<Notifications />} />
             <Route path="profile" element={<Profile />} />
+          </Route>
+
+          {/* Mentor Portal Protected Nested Routes */}
+          <Route
+            path="/mentor"
+            element={
+              <ProtectedRoute allowedRoles={['mentor']}>
+                <MentorLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<Navigate to="/mentor/dashboard" replace />} />
+            <Route path="dashboard" element={<MentorDashboard />} />
+            <Route path="profile" element={<MentorProfile />} />
+            <Route path="requests" element={<BookingRequests />} />
+            <Route path="sessions" element={<MySessions />} />
+            <Route path="sessions/:id" element={<BookingDetails />} />
+            <Route path="reviews" element={<MentorReviews />} />
+            <Route path="notifications" element={<MentorNotifications />} />
           </Route>
 
           {/* Global Protected Routes */}

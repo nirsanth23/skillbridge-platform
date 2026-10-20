@@ -9,6 +9,7 @@ import mentorRoutes from './modules/mentors/mentor.routes.js'
 import notificationRoutes from './modules/notifications/notification.routes.js'
 import projectRoutes from './modules/projects/project.routes.js'
 import proposalRoutes from './modules/proposals/proposal.routes.js'
+import reviewRoutes from './modules/reviews/review.routes.js'
 import studentRoutes from './modules/student/student.routes.js'
 import userRoutes from './modules/users/user.routes.js'
 
@@ -36,11 +37,13 @@ app.use('/api/auth', authRoutes)
 app.use('/api/users', userRoutes)
 app.use('/api/freelancers', freelancerRoutes)
 app.use('/api/mentors', mentorRoutes)
+app.use('/api/mentor', mentorRoutes)
 app.use('/api/companies', companyRoutes)
 app.use('/api/projects', projectRoutes)
 app.use('/api/proposals', proposalRoutes)
 app.use('/api/bookings', bookingRoutes)
 app.use('/api/notifications', notificationRoutes)
+app.use('/api/reviews', reviewRoutes)
 app.use('/api/student', studentRoutes)
 
 

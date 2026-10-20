@@ -66,10 +66,20 @@ const runTests = async () => {
     }
   }
 
+  let mongod
   try {
-    const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/skillbridge'
-    await mongoose.connect(mongoUri)
-    console.log('Connected to MongoDB for test verification.')
+    let mongoUri = process.env.MONGODB_URI
+    try {
+      if (!mongoUri || mongoUri.includes('mongodb.net')) throw new Error('Use memory server for isolated testing')
+      await mongoose.connect(mongoUri, { serverSelectionTimeoutMS: 2000 })
+      console.log('Connected to MongoDB for test verification.')
+    } catch {
+      const { MongoMemoryServer } = await import('mongodb-memory-server')
+      mongod = await MongoMemoryServer.create()
+      mongoUri = mongod.getUri()
+      await mongoose.connect(mongoUri)
+      console.log('Connected to In-Memory MongoDB for test verification.')
+    }
 
     server = app.listen(5009)
     await new Promise((resolve) => setTimeout(resolve, 500))
@@ -452,6 +462,7 @@ const runTests = async () => {
   } finally {
     if (server) server.close()
     await mongoose.disconnect()
+    if (mongod) await mongod.stop()
 
     console.log('\n==================================================')
     console.log(`TOTAL TESTS: ${passed + failed} | PASSED: ${passed} | FAILED: ${failed}`)

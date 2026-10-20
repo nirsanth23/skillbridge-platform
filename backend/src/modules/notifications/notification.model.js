@@ -16,8 +16,12 @@ const notificationSchema = new mongoose.Schema(
         'proposal_accepted',
         'proposal_rejected',
         'booking_created',
+        'booking_accepted',
+        'booking_rejected',
+        'booking_completed',
         'booking_status_changed',
         'booking_cancelled',
+        'review_received',
         'project_status_changed',
         'general',
       ],
@@ -38,7 +42,7 @@ const notificationSchema = new mongoose.Schema(
     relatedEntity: {
       entityType: {
         type: String,
-        enum: ['project', 'proposal', 'booking', 'user', 'none'],
+        enum: ['project', 'proposal', 'booking', 'review', 'user', 'none'],
         default: 'none',
       },
       entityId: {
