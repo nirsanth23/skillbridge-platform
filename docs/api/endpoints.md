@@ -77,6 +77,7 @@
 
 | Method | Endpoint | Purpose | Auth Required | Allowed Roles |
 | :--- | :--- | :--- | :--- | :--- |
+| `GET` | `/mentors/dashboard` / `/mentor/dashboard` | Fetch aggregated dashboard statistics (booking counts, rating, upcoming session, notifications) | Required | Mentor |
 | `GET` | `/mentors/me` | Fetch authenticated mentor's own profile | Required | Mentor |
 | `PATCH` | `/mentors/me` | Update authenticated mentor's profile (bio, expertise, hourlyRate, mentoringTopics, availability) | Required | Mentor |
 | `GET` | `/mentors/:id` | Fetch public mentor details, expertise, and availability | Public | All |

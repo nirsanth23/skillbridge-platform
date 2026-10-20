@@ -6,6 +6,7 @@ import * as mentorController from './mentor.controller.js'
 const router = express.Router()
 
 // Authenticated role-restricted routes
+router.get('/dashboard', authenticate, authorizeRoles('mentor'), mentorController.getDashboard)
 router.get('/me', authenticate, authorizeRoles('mentor'), mentorController.getMyProfile)
 router.patch('/me', authenticate, authorizeRoles('mentor'), mentorController.updateMyProfile)
 

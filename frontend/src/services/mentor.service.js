@@ -32,6 +32,14 @@ export const mentorService = {
     const response = await api.patch('/mentors/me', data)
     return response.data
   },
+
+  /**
+   * Get authenticated mentor's aggregated dashboard statistics
+   */
+  getDashboardData: async () => {
+    const response = await api.get('/mentor/dashboard')
+    return response.data
+  },
 }
 
 export default mentorService

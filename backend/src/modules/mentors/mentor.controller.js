@@ -90,3 +90,21 @@ export const getMentorById = async (req, res, next) => {
   }
 }
 
+/**
+ * @route   GET /api/mentors/dashboard or /api/mentor/dashboard
+ * @desc    Get aggregated dashboard stats for authenticated mentor
+ * @access  Private (Mentor only)
+ */
+export const getDashboard = async (req, res, next) => {
+  try {
+    const data = await mentorService.getMentorDashboardData(req.user.id)
+    return res.status(200).json({
+      success: true,
+      data,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+

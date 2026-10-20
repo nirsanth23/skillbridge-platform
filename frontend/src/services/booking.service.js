@@ -32,6 +32,38 @@ export const bookingService = {
     const response = await api.patch(`/bookings/${id}/cancel`)
     return response.data
   },
+
+  /**
+   * Get incoming booking requests for mentor
+   */
+  getBookingRequests: async (params = {}) => {
+    const response = await api.get('/bookings/mentor/requests', { params })
+    return response.data
+  },
+
+  /**
+   * Accept an incoming booking request
+   */
+  acceptBooking: async (id) => {
+    const response = await api.patch(`/bookings/${id}/accept`)
+    return response.data
+  },
+
+  /**
+   * Reject an incoming booking request
+   */
+  rejectBooking: async (id, reason = '') => {
+    const response = await api.patch(`/bookings/${id}/reject`, { reason })
+    return response.data
+  },
+
+  /**
+   * Complete a mentorship session
+   */
+  completeBooking: async (id) => {
+    const response = await api.patch(`/bookings/${id}/complete`)
+    return response.data
+  },
 }
 
 export default bookingService
