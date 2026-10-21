@@ -157,7 +157,13 @@ export const EditProject = () => {
       await projectService.updateProject(id, payload)
       setSuccess('Project updated successfully!')
       setTimeout(() => {
-        navigate(`/projects/${id}`)
+        if (user?.role === 'company') {
+          navigate(`/company/projects/${id}`)
+        } else if (user?.role === 'student') {
+          navigate(`/student/projects/${id}`)
+        } else {
+          navigate(`/projects/${id}`)
+        }
       }, 1200)
     } catch (err) {
       const msg = err.response?.data?.message || err.response?.data?.errors?.general || 'Failed to update project'

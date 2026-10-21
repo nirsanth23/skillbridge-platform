@@ -6,6 +6,7 @@ import * as companyController from './company.controller.js'
 const router = express.Router()
 
 // Authenticated role-restricted routes
+router.get('/dashboard', authenticate, authorizeRoles('company'), companyController.getDashboard)
 router.get('/me', authenticate, authorizeRoles('company'), companyController.getMyProfile)
 router.patch('/me', authenticate, authorizeRoles('company'), companyController.updateMyProfile)
 

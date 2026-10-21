@@ -1,5 +1,9 @@
 import mongoose from 'mongoose'
 import CompanyProfile from './company.model.js'
+import User from '../users/user.model.js'
+import Project from '../projects/project.model.js'
+import Proposal from '../proposals/proposal.model.js'
+import Notification from '../notifications/notification.model.js'
 
 /**
  * Retrieves the company profile for the authenticated user (creates if not exists)
@@ -72,4 +76,60 @@ export const getCompanyById = async (id) => {
   }
 
   return profile.toJSON()
+}
+
+/**
+ * Calculates aggregated dashboard data for the authenticated company
+ * @param {string} userId - Company's User ObjectId
+ * @returns {Promise<Object>} Aggregated dashboard statistics
+ */
+export const getCompanyDashboardData = async (userId) => {
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    const error = new Error('Invalid user ID')
+    error.statusCode = 400
+    throw error
+  }
+
+  const [user, profile, projects, notifications] = await Promise.all([
+    User.findById(userId).select('name email profileImage role isVerified status'),
+    CompanyProfile.findOne({ user: userId }),
+    Project.find({ owner: userId }).sort({ createdAt: -1 }),
+    Notification.find({ recipient: userId }).sort({ createdAt: -1 }).limit(10),
+  ])
+
+  const projectIds = projects.map((p) => p._id)
+
+  const proposals = await Proposal.find({ project: { $in: projectIds } })
+    .populate('freelancer', 'name email profileImage role')
+    .sort({ createdAt: -1 })
+
+  const stats = {
+    totalProjects: projects.length,
+    openProjects: projects.filter((p) => p.status === 'open').length,
+    inProgressProjects: projects.filter((p) => p.status === 'in_progress').length,
+    completedProjects: projects.filter((p) => p.status === 'completed').length,
+    cancelledProjects: projects.filter((p) => p.status === 'cancelled').length,
+    pendingProposals: proposals.filter((p) => p.status === 'pending').length,
+    acceptedProposals: proposals.filter((p) => p.status === 'accepted').length,
+    hiredFreelancers: new Set(
+      projects.filter((p) => p.hiredFreelancer).map((p) => String(p.hiredFreelancer))
+    ).size,
+  }
+
+  return {
+    stats,
+    recentProjects: projects.slice(0, 5).map((p) => p.toJSON()),
+    recentNotifications: notifications.map((n) => n.toJSON()),
+    recentProposals: proposals.slice(0, 5).map((p) => p.toJSON()),
+    company: {
+      id: user?._id,
+      name: user?.name,
+      email: user?.email,
+      profileImage: user?.profileImage,
+      role: user?.role,
+      isVerified: user?.isVerified,
+      status: user?.status,
+      profile: profile ? profile.toJSON() : null,
+    },
+  }
 }

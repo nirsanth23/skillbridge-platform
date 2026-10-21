@@ -27,11 +27,22 @@ import MySessions from './pages/mentor/MySessions'
 import BookingDetails from './pages/mentor/BookingDetails'
 import MentorReviews from './pages/mentor/MentorReviews'
 import MentorNotifications from './pages/mentor/MentorNotifications'
+import CompanyLayout from './components/layout/CompanyLayout'
+import CompanyDashboard from './pages/company/CompanyDashboard'
+import CompanyProfile from './pages/company/CompanyProfile'
+import CompanyProjects from './pages/company/CompanyProjects'
+import CompanyProjectProposals from './pages/company/CompanyProjectProposals'
+import FindFreelancers from './pages/company/FindFreelancers'
+import FreelancerDetails from './pages/company/FreelancerDetails'
+import CompanyNotifications from './pages/company/CompanyNotifications'
 
 const AppContent = () => {
   const { user, isAuthenticated } = useAuth()
   const location = useLocation()
-  const isPortal = location.pathname.startsWith('/student') || location.pathname.startsWith('/mentor')
+  const isPortal =
+    location.pathname.startsWith('/student') ||
+    location.pathname.startsWith('/mentor') ||
+    location.pathname.startsWith('/company')
 
   // Helper default redirect based on role
   const getDefaultHome = () => {
@@ -41,6 +52,9 @@ const AppContent = () => {
       }
       if (user?.role === 'mentor') {
         return '/mentor/dashboard'
+      }
+      if (user?.role === 'company') {
+        return '/company/dashboard'
       }
     }
     return '/projects'
@@ -98,6 +112,30 @@ const AppContent = () => {
             <Route path="sessions/:id" element={<BookingDetails />} />
             <Route path="reviews" element={<MentorReviews />} />
             <Route path="notifications" element={<MentorNotifications />} />
+          </Route>
+
+          {/* Company Portal Protected Nested Routes */}
+          <Route
+            path="/company"
+            element={
+              <ProtectedRoute allowedRoles={['company']}>
+                <CompanyLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<Navigate to="/company/dashboard" replace />} />
+            <Route path="dashboard" element={<CompanyDashboard />} />
+            <Route path="profile" element={<CompanyProfile />} />
+            <Route path="find-projects" element={<Projects />} />
+            <Route path="projects" element={<CompanyProjects />} />
+            <Route path="projects/new" element={<CreateProject />} />
+            <Route path="projects/:id" element={<ProjectDetails />} />
+            <Route path="projects/:id/edit" element={<EditProject />} />
+            <Route path="projects/:id/proposals" element={<CompanyProjectProposals />} />
+            <Route path="proposals" element={<CompanyProjectProposals />} />
+            <Route path="freelancers" element={<FindFreelancers />} />
+            <Route path="freelancers/:id" element={<FreelancerDetails />} />
+            <Route path="notifications" element={<CompanyNotifications />} />
           </Route>
 
           {/* Global Protected Routes */}

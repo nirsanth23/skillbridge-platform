@@ -12,6 +12,7 @@ import {
   Tag,
   Trash2,
   User,
+  Users,
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
@@ -154,7 +155,13 @@ export const ProjectDetails = () => {
         {/* Navigation Breadcrumb */}
         <div className="flex items-center justify-between">
           <Link
-            to="/projects"
+            to={
+              user?.role === 'company'
+                ? '/company/projects'
+                : user?.role === 'student'
+                ? '/student/projects'
+                : '/projects'
+            }
             className="inline-flex items-center space-x-1.5 text-xs font-semibold text-slate-500 hover:text-indigo-600 transition"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -164,7 +171,27 @@ export const ProjectDetails = () => {
           {isOwner && (
             <div className="flex items-center space-x-2">
               <Link
-                to={`/projects/${project._id}/edit`}
+                to={
+                  user?.role === 'company'
+                    ? `/company/projects/${project._id}/proposals`
+                    : user?.role === 'student'
+                    ? `/student/projects/${project._id}/proposals`
+                    : `/projects/${project._id}/proposals`
+                }
+                className="inline-flex items-center space-x-1 px-3.5 py-1.5 bg-violet-50 border border-violet-200 hover:bg-violet-100 text-violet-700 rounded-xl text-xs font-semibold shadow-2xs transition"
+              >
+                <Users className="w-3.5 h-3.5" />
+                <span>View Proposals</span>
+              </Link>
+
+              <Link
+                to={
+                  user?.role === 'company'
+                    ? `/company/projects/${project._id}/edit`
+                    : user?.role === 'student'
+                    ? `/student/projects/${project._id}/edit`
+                    : `/projects/${project._id}/edit`
+                }
                 className="inline-flex items-center space-x-1 px-3.5 py-1.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 rounded-xl text-xs font-semibold shadow-sm transition"
               >
                 <Edit3 className="w-3.5 h-3.5" />

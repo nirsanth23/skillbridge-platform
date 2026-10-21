@@ -72,3 +72,21 @@ export const getCompanyById = async (req, res, next) => {
     next(error)
   }
 }
+
+/**
+ * @route   GET /api/company/dashboard, GET /api/companies/dashboard
+ * @desc    Get aggregated dashboard stats for authenticated company
+ * @access  Private (Company only)
+ */
+export const getDashboard = async (req, res, next) => {
+  try {
+    const data = await companyService.getCompanyDashboardData(req.user.id)
+    return res.status(200).json({
+      success: true,
+      data,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
