@@ -6,6 +6,8 @@ import * as freelancerController from './freelancer.controller.js'
 const router = express.Router()
 
 // Authenticated role-restricted routes
+router.get('/dashboard', authenticate, authorizeRoles('freelancer'), freelancerController.getDashboard)
+router.get('/active-projects', authenticate, authorizeRoles('freelancer'), freelancerController.getActiveProjects)
 router.get('/me', authenticate, authorizeRoles('freelancer'), freelancerController.getMyProfile)
 router.patch('/me', authenticate, authorizeRoles('freelancer'), freelancerController.updateMyProfile)
 

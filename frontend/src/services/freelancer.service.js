@@ -20,6 +20,16 @@ export const freelancerService = {
     const response = await api.get(`/freelancers/${id}`)
     return response.data
   },
+
+  getDashboard: async () => {
+    const response = await api.get('/freelancers/dashboard')
+    return response.data
+  },
+
+  getActiveProjects: async (params = {}) => {
+    const response = await api.get('/freelancers/active-projects', { params })
+    return response.data
+  },
 }
 
 export default freelancerService

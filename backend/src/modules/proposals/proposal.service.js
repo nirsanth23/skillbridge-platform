@@ -318,3 +318,121 @@ export const rejectProposal = async (proposalId, userId) => {
 
   return proposal.toJSON()
 }
+
+/**
+ * Gets all proposals submitted by the logged-in freelancer
+ * @param {string} freelancerId
+ * @param {Object} filters - { status, page, limit }
+ * @returns {Promise<Object>}
+ */
+export const getMyProposals = async (freelancerId, filters = {}) => {
+  const { status, page = 1, limit = 20 } = filters
+  const query = { freelancer: freelancerId }
+  if (status) query.status = status
+
+  const skip = (Number(page) - 1) * Number(limit)
+  const [proposals, total] = await Promise.all([
+    Proposal.find(query)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(Number(limit))
+      .populate('project', 'title status owner budgetMin budgetMax budgetType deadline category skills')
+      .lean(),
+    Proposal.countDocuments(query),
+  ])
+
+  return {
+    proposals,
+    pagination: {
+      total,
+      page: Number(page),
+      limit: Number(limit),
+      totalPages: Math.ceil(total / Number(limit)),
+    },
+  }
+}
+
+/**
+ * Withdraws a pending proposal (freelancer only)
+ * @param {string} proposalId
+ * @param {string} freelancerId
+ * @returns {Promise<Object>}
+ */
+export const withdrawProposal = async (proposalId, freelancerId) => {
+  if (!mongoose.Types.ObjectId.isValid(proposalId)) {
+    const error = new Error('Invalid proposal ID')
+    error.statusCode = 400
+    throw error
+  }
+
+  const proposal = await Proposal.findById(proposalId)
+  if (!proposal) {
+    const error = new Error('Proposal not found')
+    error.statusCode = 404
+    throw error
+  }
+
+  if (String(proposal.freelancer) !== String(freelancerId)) {
+    const error = new Error('Access denied. You can only withdraw your own proposals')
+    error.statusCode = 403
+    throw error
+  }
+
+  if (proposal.status !== 'pending') {
+    const error = new Error(`Cannot withdraw a proposal that is already ${proposal.status}`)
+    error.statusCode = 400
+    throw error
+  }
+
+  proposal.status = 'withdrawn'
+  await proposal.save()
+
+  return proposal.toJSON()
+}
+
+/**
+ * Updates a pending proposal's cover letter / budget / duration (freelancer only)
+ * @param {string} proposalId
+ * @param {string} freelancerId
+ * @param {Object} updates
+ * @returns {Promise<Object>}
+ */
+export const updateProposal = async (proposalId, freelancerId, updates) => {
+  if (!mongoose.Types.ObjectId.isValid(proposalId)) {
+    const error = new Error('Invalid proposal ID')
+    error.statusCode = 400
+    throw error
+  }
+
+  const proposal = await Proposal.findById(proposalId)
+  if (!proposal) {
+    const error = new Error('Proposal not found')
+    error.statusCode = 404
+    throw error
+  }
+
+  if (String(proposal.freelancer) !== String(freelancerId)) {
+    const error = new Error('Access denied. You can only edit your own proposals')
+    error.statusCode = 403
+    throw error
+  }
+
+  if (proposal.status !== 'pending') {
+    const error = new Error(`Cannot edit a proposal that is already ${proposal.status}`)
+    error.statusCode = 400
+    throw error
+  }
+
+  const allowed = ['coverLetter', 'proposedBudget', 'estimatedDuration']
+  allowed.forEach((field) => {
+    if (updates[field] !== undefined) proposal[field] = updates[field]
+  })
+
+  await proposal.save()
+
+  const populated = await Proposal.findById(proposal._id)
+    .populate('freelancer', 'name email profileImage role')
+    .populate('project', 'title status owner budgetMin budgetMax budgetType')
+
+  return populated.toJSON()
+}

@@ -116,6 +116,16 @@ export const Navbar = () => {
                     <span>Mentor Portal</span>
                   </Link>
                 )}
+
+                {user?.role === 'freelancer' && (
+                  <Link
+                    to="/freelancer/dashboard"
+                    className="flex items-center space-x-1.5 px-3 py-2 rounded-xl text-sm font-semibold text-teal-700 bg-teal-50 hover:bg-teal-100 transition"
+                  >
+                    <Briefcase className="w-4 h-4" />
+                    <span>Freelancer Portal</span>
+                  </Link>
+                )}
               </nav>
             )}
           </div>
