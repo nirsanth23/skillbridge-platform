@@ -1,5 +1,9 @@
 import mongoose from 'mongoose'
 import FreelancerProfile from './freelancer.model.js'
+import Project from '../projects/project.model.js'
+import Proposal from '../proposals/proposal.model.js'
+import Notification from '../notifications/notification.model.js'
+import User from '../users/user.model.js'
 
 /**
  * Retrieves the freelancer profile for the authenticated user (creates if not exists)
@@ -161,5 +165,84 @@ export const getFreelancers = async (query = {}) => {
       pages: Math.ceil(total / limitNum) || 1,
     },
   }
+}
+
+/**
+ * Aggregates dashboard data for the authenticated freelancer
+ * @param {string} userId
+ * @returns {Promise<Object>}
+ */
+export const getFreelancerDashboardData = async (userId) => {
+  const [profile, user, proposals, activeProjects, notifications] = await Promise.all([
+    FreelancerProfile.findOne({ user: userId }),
+    User.findById(userId).select('name email profileImage role isVerified status'),
+    Proposal.find({ freelancer: userId })
+      .sort({ createdAt: -1 })
+      .populate('project', 'title status owner budgetMin budgetMax budgetType deadline category skills')
+      .lean(),
+    Project.find({ hiredFreelancer: userId })
+      .sort({ updatedAt: -1 })
+      .populate('owner', 'name email profileImage role')
+      .lean(),
+    Notification.find({ recipient: userId })
+      .sort({ createdAt: -1 })
+      .limit(5)
+      .lean(),
+  ])
+
+  // Profile completion score calculation
+  let completionPoints = 0
+  const totalPoints = 6
+  if (user?.name) completionPoints++
+  if (user?.profileImage) completionPoints++
+  if (profile?.bio && profile.bio.length >= 20) completionPoints++
+  if (profile?.skills && profile.skills.length > 0) completionPoints++
+  if (profile?.hourlyRate && profile.hourlyRate > 0) completionPoints++
+  if (profile?.portfolio && profile.portfolio.length > 0) completionPoints++
+  const profileCompletionPercentage = Math.round((completionPoints / totalPoints) * 100)
+
+  const stats = {
+    totalProposals: proposals.length,
+    pendingProposals: proposals.filter((p) => p.status === 'pending').length,
+    acceptedProposals: proposals.filter((p) => p.status === 'accepted').length,
+    rejectedProposals: proposals.filter((p) => p.status === 'rejected').length,
+    withdrawnProposals: proposals.filter((p) => p.status === 'withdrawn').length,
+    activeProjects: activeProjects.filter((p) => p.status === 'in_progress').length,
+    completedProjects: activeProjects.filter((p) => p.status === 'completed').length,
+    totalProjectsWorked: activeProjects.length,
+    rating: profile?.rating || 0,
+    reviewCount: profile?.reviewCount || 0,
+    profileCompletionPercentage,
+    hourlyRate: profile?.hourlyRate || 0,
+    availability: profile?.availability || 'available',
+  }
+
+  return {
+    stats,
+    recentProposals: proposals.slice(0, 5),
+    activeProjects: activeProjects.slice(0, 5),
+    recentNotifications: notifications,
+    profile: profile ? profile.toJSON() : null,
+    user: user ? user.toJSON() : null,
+  }
+}
+
+/**
+ * Gets active and assigned projects for the freelancer
+ * @param {string} userId
+ * @param {Object} queryOptions
+ * @returns {Promise<Array>}
+ */
+export const getActiveProjects = async (userId, queryOptions = {}) => {
+  const filter = { hiredFreelancer: userId }
+  if (queryOptions.status && ['in_progress', 'completed', 'cancelled'].includes(queryOptions.status)) {
+    filter.status = queryOptions.status
+  }
+
+  return Project.find(filter)
+    .sort({ updatedAt: -1 })
+    .populate('owner', 'name email profileImage role')
+    .populate('hiredProposal', 'proposedBudget estimatedDuration coverLetter status createdAt')
+    .lean()
 }
 

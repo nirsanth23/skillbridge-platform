@@ -90,3 +90,39 @@ export const getFreelancers = async (req, res, next) => {
   }
 }
 
+/**
+ * @route   GET /api/freelancers/dashboard
+ * @desc    Get aggregated dashboard data for authenticated freelancer
+ * @access  Private (Freelancer only)
+ */
+export const getDashboard = async (req, res, next) => {
+  try {
+    const data = await freelancerService.getFreelancerDashboardData(req.user.id)
+    return res.status(200).json({
+      success: true,
+      data,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+/**
+ * @route   GET /api/freelancers/active-projects
+ * @desc    Get active/assigned projects where freelancer was hired
+ * @access  Private (Freelancer only)
+ */
+export const getActiveProjects = async (req, res, next) => {
+  try {
+    const projects = await freelancerService.getActiveProjects(req.user.id, req.query)
+    return res.status(200).json({
+      success: true,
+      data: {
+        projects,
+      },
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+

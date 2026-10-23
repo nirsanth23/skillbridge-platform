@@ -18,6 +18,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import useAuth from '../../hooks/useAuth'
 import projectService from '../../services/project.service'
+import SubmitProposalModal from '../../components/forms/SubmitProposalModal'
 
 const STATUS_BADGES = {
   draft: 'bg-slate-100 text-slate-700 border-slate-200',
@@ -37,7 +38,8 @@ export const ProjectDetails = () => {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [deleting, setDeleting] = useState(false)
-  const [applyClicked, setApplyClicked] = useState(false)
+  const [showProposalModal, setShowProposalModal] = useState(false)
+  const [proposalSuccess, setProposalSuccess] = useState(false)
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -333,24 +335,34 @@ export const ProjectDetails = () => {
                 </div>
               </div>
 
-              {/* Apply / Proposal Placeholder Button */}
-              {!isOwner && (
+              {/* Apply / Proposal Button */}
+              {!isOwner && project.status === 'open' && (
                 <div className="pt-2 border-t border-slate-100 space-y-2">
                   <button
                     type="button"
-                    onClick={() => setApplyClicked(true)}
-                    className="w-full flex items-center justify-center space-x-2 py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-semibold shadow-sm transition"
+                    onClick={() => {
+                      if (user?.role === 'freelancer') {
+                        setShowProposalModal(true)
+                      } else {
+                        navigate('/login')
+                      }
+                    }}
+                    className="w-full flex items-center justify-center space-x-2 py-3 px-4 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-sm font-bold shadow-sm transition"
                   >
                     <Send className="w-4 h-4" />
-                    <span>Apply for Project</span>
+                    <span>Submit Proposal</span>
                   </button>
 
-                  {applyClicked && (
-                    <div className="p-3 bg-indigo-50 border border-indigo-200 text-indigo-800 rounded-xl text-xs space-y-1">
-                      <p className="font-semibold">⚡ Proposal Submissions Coming in Day 8</p>
-                      <p className="text-indigo-600">
-                        The full proposal bidding and proposal submission module will be unlocked in Day 8.
-                      </p>
+                  {user?.role !== 'freelancer' && (
+                    <p className="text-[11px] text-slate-500 text-center">
+                      Only registered freelancers can submit bids.
+                    </p>
+                  )}
+
+                  {proposalSuccess && (
+                    <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-xs flex items-center space-x-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                      <span>Your proposal was sent successfully!</span>
                     </div>
                   )}
                 </div>
@@ -403,6 +415,19 @@ export const ProjectDetails = () => {
           </div>
         </div>
       </div>
+
+      {/* Proposal Submission Modal */}
+      {showProposalModal && (
+        <SubmitProposalModal
+          project={project}
+          isOpen={showProposalModal}
+          onClose={() => setShowProposalModal(false)}
+          onSuccess={() => {
+            setProposalSuccess(true)
+            setTimeout(() => setProposalSuccess(false), 5000)
+          }}
+        />
+      )}
     </div>
   )
 }

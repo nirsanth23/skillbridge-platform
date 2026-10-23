@@ -48,6 +48,30 @@ export const proposalService = {
     const response = await api.patch(`/proposals/${id}/reject`)
     return response.data
   },
+
+  /**
+   * Get all proposals submitted by the logged-in freelancer
+   */
+  getMyProposals: async (params = {}) => {
+    const response = await api.get('/proposals/my', { params })
+    return response.data
+  },
+
+  /**
+   * Update pending proposal details
+   */
+  updateProposal: async (id, data) => {
+    const response = await api.patch(`/proposals/${id}`, data)
+    return response.data
+  },
+
+  /**
+   * Withdraw pending proposal
+   */
+  withdrawProposal: async (id) => {
+    const response = await api.patch(`/proposals/${id}/withdraw`)
+    return response.data
+  },
 }
 
 export default proposalService

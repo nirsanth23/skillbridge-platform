@@ -35,6 +35,13 @@ import CompanyProjectProposals from './pages/company/CompanyProjectProposals'
 import FindFreelancers from './pages/company/FindFreelancers'
 import FreelancerDetails from './pages/company/FreelancerDetails'
 import CompanyNotifications from './pages/company/CompanyNotifications'
+import FreelancerLayout from './components/layout/FreelancerLayout'
+import FreelancerDashboard from './pages/freelancer/FreelancerDashboard'
+import FreelancerProfile from './pages/freelancer/FreelancerProfile'
+import FindProjects from './pages/freelancer/FindProjects'
+import MyProposals from './pages/freelancer/MyProposals'
+import ActiveProjects from './pages/freelancer/ActiveProjects'
+import FreelancerNotifications from './pages/freelancer/FreelancerNotifications'
 
 const AppContent = () => {
   const { user, isAuthenticated } = useAuth()
@@ -42,7 +49,8 @@ const AppContent = () => {
   const isPortal =
     location.pathname.startsWith('/student') ||
     location.pathname.startsWith('/mentor') ||
-    location.pathname.startsWith('/company')
+    location.pathname.startsWith('/company') ||
+    location.pathname.startsWith('/freelancer')
 
   // Helper default redirect based on role
   const getDefaultHome = () => {
@@ -55,6 +63,9 @@ const AppContent = () => {
       }
       if (user?.role === 'company') {
         return '/company/dashboard'
+      }
+      if (user?.role === 'freelancer') {
+        return '/freelancer/dashboard'
       }
     }
     return '/projects'
@@ -136,6 +147,24 @@ const AppContent = () => {
             <Route path="freelancers" element={<FindFreelancers />} />
             <Route path="freelancers/:id" element={<FreelancerDetails />} />
             <Route path="notifications" element={<CompanyNotifications />} />
+          </Route>
+
+          {/* Freelancer Portal Protected Nested Routes */}
+          <Route
+            path="/freelancer"
+            element={
+              <ProtectedRoute allowedRoles={['freelancer']}>
+                <FreelancerLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<Navigate to="/freelancer/dashboard" replace />} />
+            <Route path="dashboard" element={<FreelancerDashboard />} />
+            <Route path="profile" element={<FreelancerProfile />} />
+            <Route path="find-projects" element={<FindProjects />} />
+            <Route path="proposals" element={<MyProposals />} />
+            <Route path="active-projects" element={<ActiveProjects />} />
+            <Route path="notifications" element={<FreelancerNotifications />} />
           </Route>
 
           {/* Global Protected Routes */}

@@ -65,6 +65,8 @@
 
 | Method | Endpoint | Purpose | Auth Required | Allowed Roles |
 | :--- | :--- | :--- | :--- | :--- |
+| `GET` | `/freelancers/dashboard` / `/freelancer/dashboard` | Fetch aggregated dashboard metrics (proposal stats, active projects, rating, profile completion, notifications) | Required | Freelancer |
+| `GET` | `/freelancers/active-projects` / `/freelancer/active-projects` | Fetch active/awarded projects where freelancer was hired | Required | Freelancer |
 | `GET` | `/freelancers/me` | Fetch authenticated freelancer's own profile | Required | Freelancer |
 | `PATCH` | `/freelancers/me` | Update authenticated freelancer's profile (bio, skills, hourlyRate, portfolio, availability) | Required | Freelancer |
 | `GET` | `/freelancers/:id` | Fetch public freelancer profile and portfolio | Public | All |
@@ -122,11 +124,13 @@
 | :--- | :--- | :--- | :--- | :--- |
 | `POST` | `/proposals` | Submit a project proposal / bid | Required | Freelancer |
 | `GET` | `/proposals/project/:projectId` | View all proposals submitted for a specific project | Required | Project Owner |
-| `GET` | `/proposals/my-proposals` | View all proposals submitted by current freelancer | Required | Freelancer |
+| `GET` | `/proposals/my-projects` | View all proposals across all projects owned by user | Required | Project Owner |
+| `GET` | `/proposals/my` / `/proposals/my-proposals` | View all proposals submitted by current freelancer (supports `status` filter) | Required | Freelancer |
 | `GET` | `/proposals/:id` | View proposal details | Required | Proposal Owner, Project Owner |
 | `PATCH` | `/proposals/:id/accept` | Accept proposal, hire freelancer, set project in_progress, and auto-reject other pending proposals | Required | Project Owner |
 | `PATCH` | `/proposals/:id/reject` | Explicitly reject candidate proposal | Required | Project Owner |
-| `DELETE`| `/proposals/:id` | Withdraw a submitted proposal | Required | Proposal Owner |
+| `PATCH` | `/proposals/:id` | Update a pending proposal (budget, duration, pitch) | Required | Proposal Owner (Freelancer) |
+| `PATCH` | `/proposals/:id/withdraw` | Withdraw a pending proposal | Required | Proposal Owner (Freelancer) |
 
 ---
 

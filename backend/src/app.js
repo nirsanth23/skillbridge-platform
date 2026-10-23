@@ -36,6 +36,7 @@ app.get('/api/health', (req, res) => {
 app.use('/api/auth', authRoutes)
 app.use('/api/users', userRoutes)
 app.use('/api/freelancers', freelancerRoutes)
+app.use('/api/freelancer', freelancerRoutes)
 app.use('/api/mentors', mentorRoutes)
 app.use('/api/mentor', mentorRoutes)
 app.use('/api/companies', companyRoutes)
