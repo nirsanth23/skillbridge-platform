@@ -1,6 +1,11 @@
 import api from './api'
 
 export const companyService = {
+  getDashboard: async () => {
+    const response = await api.get('/company/dashboard')
+    return response.data
+  },
+
   getMyProfile: async () => {
     const response = await api.get('/companies/me')
     return response.data

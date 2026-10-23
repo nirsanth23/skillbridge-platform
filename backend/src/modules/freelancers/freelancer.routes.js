@@ -9,6 +9,9 @@ const router = express.Router()
 router.get('/me', authenticate, authorizeRoles('freelancer'), freelancerController.getMyProfile)
 router.patch('/me', authenticate, authorizeRoles('freelancer'), freelancerController.updateMyProfile)
 
+// Public freelancer discovery
+router.get('/', freelancerController.getFreelancers)
+
 // Public profile lookup
 router.get('/:id', freelancerController.getFreelancerById)
 

@@ -72,3 +72,21 @@ export const getFreelancerById = async (req, res, next) => {
     next(error)
   }
 }
+
+/**
+ * @route   GET /api/freelancers
+ * @desc    Get public freelancers listing with search, filtering, and pagination
+ * @access  Public
+ */
+export const getFreelancers = async (req, res, next) => {
+  try {
+    const result = await freelancerService.getFreelancers(req.query)
+    return res.status(200).json({
+      success: true,
+      data: result,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+

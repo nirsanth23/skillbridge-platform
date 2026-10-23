@@ -135,7 +135,13 @@ export const CreateProject = () => {
       await projectService.createProject(payload)
       setSuccess('Project posted successfully!')
       setTimeout(() => {
-        navigate('/projects')
+        if (user?.role === 'company') {
+          navigate('/company/projects')
+        } else if (user?.role === 'student') {
+          navigate('/student/projects')
+        } else {
+          navigate('/projects')
+        }
       }, 1200)
     } catch (err) {
       const msg = err.response?.data?.message || err.response?.data?.errors?.general || 'Failed to create project'

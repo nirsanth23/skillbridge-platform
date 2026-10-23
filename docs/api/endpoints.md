@@ -86,12 +86,13 @@
 
 ---
 
-### 2.6 Companies Module (`/api/companies`)
+### 2.6 Companies Module (`/api/companies` / `/api/company`)
 
 | Method | Endpoint | Purpose | Auth Required | Allowed Roles |
 | :--- | :--- | :--- | :--- | :--- |
-| `GET` | `/companies/me` | Fetch authenticated company's own profile | Required | Company |
-| `PATCH` | `/companies/me` | Update authenticated company's profile (companyName, description, industry, website, location, companySize) | Required | Company |
+| `GET` | `/company/dashboard` / `/companies/dashboard` | Fetch aggregated dashboard statistics (project stats, pending proposals, hired count, recent projects, notifications) | Required | Company |
+| `GET` | `/companies/me` / `/company/me` | Fetch authenticated company's own profile | Required | Company |
+| `PATCH` | `/companies/me` / `/company/me` | Update authenticated company's profile (companyName, description, industry, website, location, companySize) | Required | Company |
 | `GET` | `/companies/:id` | Fetch public company details | Public | All |
 | `GET` | `/companies` | Browse verified company profiles | Public / Optional | All |
 | `GET` | `/companies/talent-pool` | View saved freelancers in company talent pool | Required | Company |

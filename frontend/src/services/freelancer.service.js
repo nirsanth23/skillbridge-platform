@@ -1,6 +1,11 @@
 import api from './api'
 
 export const freelancerService = {
+  getFreelancers: async (params = {}) => {
+    const response = await api.get('/freelancers', { params })
+    return response.data
+  },
+
   getMyProfile: async () => {
     const response = await api.get('/freelancers/me')
     return response.data

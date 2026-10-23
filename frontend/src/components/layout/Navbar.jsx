@@ -86,6 +86,36 @@ export const Navbar = () => {
                     <span>My Projects</span>
                   </Link>
                 )}
+
+                {user?.role === 'company' && (
+                  <Link
+                    to="/company/dashboard"
+                    className="flex items-center space-x-1.5 px-3 py-2 rounded-xl text-sm font-semibold text-violet-700 bg-violet-50 hover:bg-violet-100 transition"
+                  >
+                    <Building2 className="w-4 h-4" />
+                    <span>Company Portal</span>
+                  </Link>
+                )}
+
+                {user?.role === 'student' && (
+                  <Link
+                    to="/student/dashboard"
+                    className="flex items-center space-x-1.5 px-3 py-2 rounded-xl text-sm font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 transition"
+                  >
+                    <GraduationCap className="w-4 h-4" />
+                    <span>Student Portal</span>
+                  </Link>
+                )}
+
+                {user?.role === 'mentor' && (
+                  <Link
+                    to="/mentor/dashboard"
+                    className="flex items-center space-x-1.5 px-3 py-2 rounded-xl text-sm font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 transition"
+                  >
+                    <Sparkles className="w-4 h-4" />
+                    <span>Mentor Portal</span>
+                  </Link>
+                )}
               </nav>
             )}
           </div>
