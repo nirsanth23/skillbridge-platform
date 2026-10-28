@@ -105,7 +105,15 @@
 
 ---
 
-### 2.7 Projects Module (`/api/projects`)
+### 2.7 Client Portal Module (`/api/client` / `/api/clients`)
+
+| Method | Endpoint | Purpose | Auth Required | Allowed Roles |
+| :--- | :--- | :--- | :--- | :--- |
+| `GET` | `/client/dashboard` / `/clients/dashboard` | Fetch aggregated dashboard metrics (totalProjects, open/in-progress/completed project stats, total/pending/accepted proposals, hired freelancers, recent projects with proposal counts, recent proposals, and notifications scoped to authenticated client) | Required | Client |
+
+---
+
+### 2.8 Projects Module (`/api/projects`)
 
 | Method | Endpoint | Purpose | Auth Required | Allowed Roles |
 | :--- | :--- | :--- | :--- | :--- |
@@ -118,7 +126,7 @@
 
 ---
 
-### 2.8 Proposals Module (`/api/proposals`)
+### 2.9 Proposals Module (`/api/proposals`)
 
 | Method | Endpoint | Purpose | Auth Required | Allowed Roles |
 | :--- | :--- | :--- | :--- | :--- |
@@ -134,7 +142,7 @@
 
 ---
 
-### 2.9 Bookings Module (`/api/bookings`)
+### 2.10 Bookings Module (`/api/bookings`)
 
 | Method | Endpoint | Purpose | Auth Required | Allowed Roles |
 | :--- | :--- | :--- | :--- | :--- |
@@ -146,7 +154,7 @@
 
 ---
 
-### 2.10 Student Portal Module (`/api/student`)
+### 2.11 Student Portal Module (`/api/student`)
 
 | Method | Endpoint | Purpose | Auth Required | Allowed Roles |
 | :--- | :--- | :--- | :--- | :--- |
@@ -154,7 +162,7 @@
 
 ---
 
-### 2.10 Workspace Module (`/api/workspaces`)
+### 2.12 Workspace Module (`/api/workspaces`)
 
 | Method | Endpoint | Purpose | Auth Required | Allowed Roles |
 | :--- | :--- | :--- | :--- | :--- |
