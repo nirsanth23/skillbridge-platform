@@ -1,6 +1,7 @@
 import cors from 'cors'
 import express from 'express'
 import errorHandler from './middleware/error.middleware.js'
+import adminRoutes from './modules/admin/admin.routes.js'
 import authRoutes from './modules/auth/auth.routes.js'
 import bookingRoutes from './modules/bookings/booking.routes.js'
 import clientRoutes from './modules/client/client.routes.js'
@@ -36,6 +37,7 @@ app.get('/api/health', (req, res) => {
 // Module Routes
 app.use('/api/auth', authRoutes)
 app.use('/api/users', userRoutes)
+app.use('/api/admin', adminRoutes)
 app.use('/api/freelancers', freelancerRoutes)
 app.use('/api/freelancer', freelancerRoutes)
 app.use('/api/mentors', mentorRoutes)

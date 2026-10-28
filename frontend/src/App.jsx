@@ -49,6 +49,13 @@ import ClientProjectProposals from './pages/client/ClientProjectProposals'
 import ClientFindFreelancers from './pages/client/FindFreelancers'
 import ClientFreelancerDetails from './pages/client/FreelancerDetails'
 import ClientNotifications from './pages/client/ClientNotifications'
+import AdminLayout from './components/layout/AdminLayout'
+import AdminDashboard from './pages/admin/AdminDashboard'
+import AdminUsers from './pages/admin/AdminUsers'
+import AdminUserDetails from './pages/admin/AdminUserDetails'
+import AdminVerifications from './pages/admin/AdminVerifications'
+import AdminReports from './pages/admin/AdminReports'
+import AdminPlatform from './pages/admin/AdminPlatform'
 
 const AppContent = () => {
   const { user, isAuthenticated } = useAuth()
@@ -58,7 +65,8 @@ const AppContent = () => {
     location.pathname.startsWith('/mentor') ||
     location.pathname.startsWith('/company') ||
     location.pathname.startsWith('/freelancer') ||
-    location.pathname.startsWith('/client')
+    location.pathname.startsWith('/client') ||
+    location.pathname.startsWith('/admin')
 
   // Helper default redirect based on role
   const getDefaultHome = () => {
@@ -77,6 +85,9 @@ const AppContent = () => {
       }
       if (user?.role === 'client') {
         return '/client/dashboard'
+      }
+      if (user?.role === 'admin') {
+        return '/admin/dashboard'
       }
     }
     return '/projects'
@@ -199,6 +210,24 @@ const AppContent = () => {
             <Route path="freelancers" element={<ClientFindFreelancers />} />
             <Route path="freelancers/:id" element={<ClientFreelancerDetails />} />
             <Route path="notifications" element={<ClientNotifications />} />
+          </Route>
+
+          {/* Admin Portal Protected Nested Routes */}
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AdminLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<Navigate to="/admin/dashboard" replace />} />
+            <Route path="dashboard" element={<AdminDashboard />} />
+            <Route path="users" element={<AdminUsers />} />
+            <Route path="users/:id" element={<AdminUserDetails />} />
+            <Route path="verifications" element={<AdminVerifications />} />
+            <Route path="reports" element={<AdminReports />} />
+            <Route path="platform" element={<AdminPlatform />} />
           </Route>
 
           {/* Global Protected Routes */}

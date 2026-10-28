@@ -232,13 +232,20 @@
 
 ### 2.16 Admin Module (`/api/admin`)
 
+> **Security & Access Control**: All administrative endpoints (except `POST /api/admin/reports`, which accepts moderation submissions from any authenticated user) require JWT authentication and an authenticated database user with `role === 'admin'`. Public registration with the `admin` role is strictly prohibited by authentication validators. Initial administrator accounts must be provisioned via database management scripts or environment-controlled seeds. Deactivating one's own account or the platform's last active administrator is prevented. Account deactivation preserves user records and history (no physical deletion).
+
 | Method | Endpoint | Purpose | Auth Required | Allowed Roles |
 | :--- | :--- | :--- | :--- | :--- |
-| `GET` | `/admin/analytics` | Get global platform metrics (users, projects, GMV) | Required | Admin |
-| `GET` | `/admin/users` | List, search, and filter all registered platform users | Required | Admin |
-| `PATCH` | `/admin/users/:id/status` | Suspend, activate, or verify a user account | Required | Admin |
-| `GET` | `/admin/verifications` | View pending skill & company verification requests | Required | Admin |
-| `PATCH` | `/admin/verifications/:id`| Approve or reject skill verification submission | Required | Admin |
-| `GET` | `/admin/reports` | View reported users, projects, or disputes | Required | Admin |
-| `PATCH` | `/admin/reports/:id` | Resolve or dismiss filed report | Required | Admin |
-| `DELETE`| `/admin/projects/:id` | Force-remove policy-violating project | Required | Admin |
+| `GET` | `/admin/dashboard` | Aggregated database-backed statistics (user counts by role, project distribution, proposal counts, verifications, moderation reports, recent activity) | Required | Admin |
+| `GET` | `/admin/users` | List users with pagination (`page`, `limit`), search (`search`), and filters (`role`, `status`, `isVerified`). Omits sensitive password hashes. | Required | Admin |
+| `GET` | `/admin/users/:id` | View detailed administrative profile (user info, complementary role profile, activity statistics) | Required | Admin |
+| `PATCH` | `/admin/users/:id/status` | Update account status (`active`, `suspended`, `deactivated`). Self-deactivation and last active admin deactivation prevented. | Required | Admin |
+| `PATCH` | `/admin/users/:id/verify` | Direct verification toggle for user account (`isVerified: true \| false`) | Required | Admin |
+| `GET` | `/admin/verifications` | Directory of professional candidates filtered by role and verification status (`pending`, `verified`, `all`) with role profiles | Required | Admin |
+| `PATCH` | `/admin/verifications/:id/status` | Approve or revoke candidate verification badge (`isVerified: true \| false`) | Required | Admin |
+| `POST` | `/admin/reports` | Submit a moderation incident report (`reportedItemType`, `reportedItemId`, `reason`, `details`) | Required | All Authenticated |
+| `GET` | `/admin/reports` | Paginated listing of moderation incident reports with status and category filtering | Required | Admin |
+| `GET` | `/admin/reports/:id` | View incident report details, populated reporter info, and moderation history | Required | Admin |
+| `PATCH` | `/admin/reports/:id/status` | Update moderation report status (`pending`, `under_review`, `resolved`, `dismissed`) with admin notes | Required | Admin |
+| `GET` | `/admin/platform` | Deep platform analytics (role distribution, project status breakdown, category taxonomy, registration growth) | Required | Admin |
+
