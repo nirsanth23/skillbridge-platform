@@ -3,6 +3,7 @@ import express from 'express'
 import errorHandler from './middleware/error.middleware.js'
 import authRoutes from './modules/auth/auth.routes.js'
 import bookingRoutes from './modules/bookings/booking.routes.js'
+import clientRoutes from './modules/client/client.routes.js'
 import companyRoutes from './modules/companies/company.routes.js'
 import freelancerRoutes from './modules/freelancers/freelancer.routes.js'
 import mentorRoutes from './modules/mentors/mentor.routes.js'
@@ -41,6 +42,8 @@ app.use('/api/mentors', mentorRoutes)
 app.use('/api/mentor', mentorRoutes)
 app.use('/api/companies', companyRoutes)
 app.use('/api/company', companyRoutes)
+app.use('/api/client', clientRoutes)
+app.use('/api/clients', clientRoutes)
 app.use('/api/projects', projectRoutes)
 app.use('/api/proposals', proposalRoutes)
 app.use('/api/bookings', bookingRoutes)
